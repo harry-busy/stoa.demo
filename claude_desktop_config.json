@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "stoa": {
+      "command": "npx",
+      "args": ["-y", "stoa-mcp-server"],
+      "env": {
+        "STOA_API_KEY": "stoa_your_api_key_here",
+        "WALLET_PRIVATE_KEY": "0xYourPrivateKeyHere"
+      }
+    }
+  }
+}

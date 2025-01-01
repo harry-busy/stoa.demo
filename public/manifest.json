@@ -1,0 +1,16 @@
+{
+  "name": "Stoa — AI Agent Marketplace",
+  "short_name": "Stoa",
+  "description": "Discover, use, and monetize AI agents with pay-per-call micropayments.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
