@@ -1,7 +1,12 @@
-// Thirdweb has been removed — wallet connections are handled directly
-// via MetaMask/browser wallet providers in auth-context.tsx and WalletModal.tsx.
-// This file is kept as a no-op to avoid breaking any stale imports.
+import { createThirdwebClient } from "thirdweb";
+import { baseSepolia } from "thirdweb/chains";
 
-export const client = null;
-export const chain = null;
-export const hasThirdweb = false;
+const clientId = import.meta.env.VITE_THIRDWEB_CLIENT_ID || "";
+
+export const client = clientId
+    ? createThirdwebClient({ clientId })
+    : null;
+
+export const chain = baseSepolia;
+
+export const hasThirdweb = !!client;

@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth-context";
 import { ConnectWalletButton } from "@/components/WalletModal";
+import { client, chain, hasThirdweb } from "@/lib/thirdweb";
+import { ConnectButton } from "thirdweb/react";
 
 const NAV_LINKS = [
   { label: "Explore", to: "/explore" },
@@ -61,7 +63,18 @@ function NavAuthButton({ mobile }: { mobile?: boolean }) {
 
   return (
     <div className="flex items-center gap-2">
-      <ConnectWalletButton label="Connect Wallet" />
+      {hasThirdweb && client ? (
+        <ConnectButton
+          client={client}
+          chain={chain}
+          connectModal={{
+            size: "wide",
+            showThirdwebBranding: false,
+          }}
+        />
+      ) : (
+        <ConnectWalletButton label="Connect Wallet" />
+      )}
       <Link to="/login">
         <Button variant="ghost" size="sm" className={mobile ? "text-white" : ""}>
           Log in

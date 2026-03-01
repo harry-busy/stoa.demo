@@ -12,6 +12,8 @@ import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SkipToContent } from "@/components/SkipToContent";
+import { ThirdwebProvider } from "thirdweb/react";
+import { client as twClient } from "@/lib/thirdweb";
 
 // Critical routes — eagerly loaded
 import Index from "./pages/Index";
@@ -88,27 +90,35 @@ function AnimatedRoutes() {
   );
 }
 
-const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <ErrorBoundary>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <SkipToContent />
-              <ScrollToTop />
-              <GrainOverlay />
-              <Navbar />
-              <AnimatedRoutes />
-              <Footer />
-            </BrowserRouter>
-          </ErrorBoundary>
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+const App = () => {
+  const inner = (
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <ErrorBoundary>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <SkipToContent />
+                <ScrollToTop />
+                <GrainOverlay />
+                <Navbar />
+                <AnimatedRoutes />
+                <Footer />
+              </BrowserRouter>
+            </ErrorBoundary>
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
+
+  // Wrap in ThirdwebProvider only if client is available
+  if (twClient) {
+    return <ThirdwebProvider>{inner}</ThirdwebProvider>;
+  }
+  return inner;
+};
 
 export default App;
