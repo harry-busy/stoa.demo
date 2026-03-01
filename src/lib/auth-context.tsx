@@ -95,9 +95,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const connectWallet = useCallback(async (): Promise<string> => {
-    const eth = (window as any).ethereum;
+    // Use the selected provider (set by WalletModal) or fall back to window.ethereum
+    const eth = (window as any)._selectedProvider || (window as any).ethereum;
     if (!eth) {
-      throw new Error("MetaMask not detected. Please install MetaMask.");
+      throw new Error("No wallet detected. Please install MetaMask.");
     }
 
     setWalletConnecting(true);
@@ -105,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const accounts: string[] = await eth.request({ method: "eth_requestAccounts" });
       const addr = accounts[0];
 
-      // Switch to Base Sepolia (skip silently if wallet doesn't support it)
+      // Switch to Base Sepolia
       try {
         await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: BASE_SEPOLIA_CHAIN_ID }] });
       } catch (switchErr: any) {
@@ -122,10 +123,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               }],
             });
           } catch {
-            // Wallet doesn't support addEthereumChain (e.g. Uniswap) — continue anyway
+            // Wallet doesn't support addEthereumChain — continue anyway
           }
         }
-        // 4200 = wallet doesn't support this method — ignore silently
+        // Other errors (4200 = unsupported method) — ignore silently
       }
 
       setWalletAddress(addr);
@@ -133,6 +134,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return addr;
     } finally {
       setWalletConnecting(false);
+      // Clean up the selected provider
+      delete (window as any)._selectedProvider;
     }
   }, []);
 

@@ -270,8 +270,8 @@ const DeveloperOnboarding = () => {
     try {
       const result = await register(form.email, form.password, form.name);
       setApiKey(result.apiKey || "");
-      if (activeAccount?.address) {
-        await linkWallet(activeAccount.address).catch(() => { });
+      if (walletAddress) {
+        await linkWallet(walletAddress).catch(() => { });
       }
       setStep(1); // Go to Register Agent
     } catch (err: any) {
@@ -300,7 +300,7 @@ const DeveloperOnboarding = () => {
         : agentForm.description + " — AI-powered service on Stoa";
 
       // Get owner wallet address
-      const ownerAddress = activeAccount?.address || "0x0000000000000000000000000000000000000000";
+      const ownerAddress = walletAddress || "0x0000000000000000000000000000000000000000";
 
       const result = await api.createService({
         name: agentForm.name,

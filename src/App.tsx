@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "re
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, lazy, Suspense } from "react";
 import { ThemeProvider } from "next-themes";
-import { ThirdwebProvider } from "thirdweb/react";
 import { AuthProvider } from "@/lib/auth-context";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -90,28 +89,26 @@ function AnimatedRoutes() {
 }
 
 const App = () => (
-  <ThirdwebProvider>
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <ErrorBoundary>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <SkipToContent />
-                <ScrollToTop />
-                <GrainOverlay />
-                <Navbar />
-                <AnimatedRoutes />
-                <Footer />
-              </BrowserRouter>
-            </ErrorBoundary>
-          </TooltipProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
-  </ThirdwebProvider>
+  <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <ErrorBoundary>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <SkipToContent />
+              <ScrollToTop />
+              <GrainOverlay />
+              <Navbar />
+              <AnimatedRoutes />
+              <Footer />
+            </BrowserRouter>
+          </ErrorBoundary>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
