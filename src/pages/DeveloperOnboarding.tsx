@@ -255,12 +255,12 @@ const DeveloperOnboarding = () => {
     })();
   }, [walletAddress, isAuthenticated, register, linkWallet]);
 
-  // If already authenticated and wallet connected, jump to Register Agent
+  // If already authenticated OR wallet already connected, skip Connect step
   useEffect(() => {
-    if (isAuthenticated && step === 0) {
+    if ((isAuthenticated || walletAddress) && step === 0) {
       setStep(1);
     }
-  }, [isAuthenticated, step]);
+  }, [isAuthenticated, walletAddress, step]);
 
   const isFormValid = form.name && form.email && form.password.length >= 8 && form.password === form.confirm;
   const isAgentValid = agentForm.name && agentForm.description && agentForm.endpoint && agentForm.price;

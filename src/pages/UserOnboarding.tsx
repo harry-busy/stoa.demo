@@ -240,10 +240,10 @@ const UserOnboarding = () => {
 
   const isFormValid = name.trim() && email.trim() && password.length >= 8 && password === confirm;
 
-  // Auto-advance to step 1 after wallet connect + registration
+  // Auto-advance to step 1 if already connected/authenticated
   useEffect(() => {
-    if (walletAddress && isAuthenticated && step === 0) {
-      linkWallet(walletAddress).catch(() => {});
+    if ((walletAddress || isAuthenticated) && step === 0) {
+      if (walletAddress) linkWallet(walletAddress).catch(() => { });
       setStep(1);
     }
   }, [walletAddress, isAuthenticated, step, linkWallet]);
@@ -253,7 +253,7 @@ const UserOnboarding = () => {
     try {
       await registerUser(email, password, name);
       if (walletAddress) {
-        await linkWallet(walletAddress).catch(() => {});
+        await linkWallet(walletAddress).catch(() => { });
       }
       setStep(1);
     } catch (err: any) {
