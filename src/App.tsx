@@ -106,7 +106,7 @@ function ThirdwebWalletSync() {
 
 const App = () => {
   const inner = (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           {twClient && <ThirdwebWalletSync />}
