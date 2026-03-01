@@ -18,6 +18,8 @@ interface AuthState {
   walletConnecting: boolean;
   connectWallet: () => Promise<string>;
   disconnectWallet: () => void;
+  // External wallet sync (e.g. from thirdweb)
+  setWalletExternal: (address: string | null) => void;
 }
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -91,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem("stoa_wallet");
         setWalletAddress(null);
       }
-    }).catch(() => {});
+    }).catch(() => { });
   }, []);
 
   const connectWallet = useCallback(async (): Promise<string> => {
@@ -144,6 +146,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("stoa_wallet");
   }, []);
 
+  const setWalletExternal = useCallback((address: string | null) => {
+    if (address) {
+      setWalletAddress(address);
+      localStorage.setItem("stoa_wallet", address);
+    } else {
+      setWalletAddress(null);
+      localStorage.removeItem("stoa_wallet");
+    }
+  }, []);
+
   const loginFn = useCallback(async (email: string, password: string) => {
     const data = await api.login(email, password);
     localStorage.setItem("stoa_token", data.token);
@@ -186,6 +198,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         walletConnecting,
         connectWallet,
         disconnectWallet,
+        setWalletExternal,
       }}
     >
       {children}

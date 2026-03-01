@@ -6,13 +6,13 @@ import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "re
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, lazy, Suspense } from "react";
 import { ThemeProvider } from "next-themes";
-import { AuthProvider } from "@/lib/auth-context";
+import { AuthProvider, useAuth } from "@/lib/auth-context";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SkipToContent } from "@/components/SkipToContent";
-import { ThirdwebProvider } from "thirdweb/react";
+import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
 import { client as twClient } from "@/lib/thirdweb";
 
 // Critical routes — eagerly loaded
@@ -90,11 +90,26 @@ function AnimatedRoutes() {
   );
 }
 
+/** Syncs the thirdweb active account → auth-context walletAddress */
+function ThirdwebWalletSync() {
+  const account = useActiveAccount();
+  const { setWalletExternal } = useAuth();
+
+  useEffect(() => {
+    if (account?.address) {
+      setWalletExternal(account.address);
+    }
+  }, [account?.address, setWalletExternal]);
+
+  return null;
+}
+
 const App = () => {
   const inner = (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
+          {twClient && <ThirdwebWalletSync />}
           <TooltipProvider>
             <ErrorBoundary>
               <Toaster />
@@ -114,7 +129,6 @@ const App = () => {
     </ThemeProvider>
   );
 
-  // Wrap in ThirdwebProvider only if client is available
   if (twClient) {
     return <ThirdwebProvider>{inner}</ThirdwebProvider>;
   }
